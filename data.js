@@ -38,9 +38,15 @@
     "台風": { grp: "dan", cat: "nettai", key: "熱帯の太平洋上で発生し、最大風速が17.2m/sをこえるようになったものが台風です。" },
   };
 
+  // part:ri:begin（shared-workflows の template/parts/data/ri.js の写し。ここでは直さない。node scripts/sync-template.mjs で写す）
   const ri = (R, a, b) => a + Math.floor(R() * (b - a + 1));
+  // part:ri:end
+  // part:shuffle:begin（shared-workflows の template/parts/data/shuffle.js の写し。ここでは直さない。node scripts/sync-template.mjs で写す）
   function shuffle(R, a) { const b = a.slice(); for (let i = b.length - 1; i > 0; i--) { const j = ri(R, 0, i); [b[i], b[j]] = [b[j], b[i]]; } return b; }
+  // part:shuffle:end
+  // part:pickN:begin（shared-workflows の template/parts/data/pickN.js の写し。ここでは直さない。node scripts/sync-template.mjs で写す）
   function pickN(R, a, n) { return shuffle(R, a).slice(0, n); }
+  // part:pickN:end
   const MEDIA = ["天気図で", "天気予報で", "理科の授業で", "ニュースで", "テスト勉強で"];
   // 問いの前につく言い方（どれでも答えは同じ）
   const PRE = ["ある日の天気。", "天気図を見た。", "天気予報の解説。", "ある時期の天気。", "日本付近のようす。"];
@@ -114,8 +120,12 @@
   const BY = Object.fromEntries(KINDS.map((k) => [k.id, k]));
   const kindsOf = (lv) => KINDS.filter((k) => k.lv === lv).map((k) => k.id);
 
+  // part:seedOf:begin（shared-workflows の template/parts/data/seedOf.js の写し。ここでは直さない。node scripts/sync-template.mjs で写す）
   function seedOf(str) { let h = 2166136261; for (const ch of String(str)) { h ^= ch.charCodeAt(0); h = Math.imul(h, 16777619); } return h >>> 0; }
+  // part:seedOf:end
+  // part:rng:begin（shared-workflows の template/parts/data/rng.js の写し。ここでは直さない。node scripts/sync-template.mjs で写す）
   function rng(seed) { let a = seed >>> 0; return () => { a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+  // part:rng:end
 
   // 1問を作る。tag は「種類|種」（例 "f_seiko|2026-11-18:d0"）。同じ tag ならいつも同じ問題
   function make(tag) {
